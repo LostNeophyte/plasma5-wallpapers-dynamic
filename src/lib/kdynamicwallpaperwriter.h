@@ -54,6 +54,9 @@ public:
     void setSpeed(int speed);
     std::optional<int> speed() const;
 
+    void setQuality(int quality);
+    std::optional<int> quality() const;
+
     void setMetaData(const QList<KDynamicWallpaperMetaData> &metaData);
     QList<KDynamicWallpaperMetaData> metaData() const;
 

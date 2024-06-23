@@ -31,6 +31,10 @@ int main(int argc, char **argv)
     speedOption.setDescription(i18n("Encoding speed, 0 - slowest, 10 - fastest"));
     speedOption.setValueName(QStringLiteral("speed"));
 
+    QCommandLineOption qualityOption(QStringLiteral("quality"));
+    qualityOption.setDescription(i18n("Encoding quality, 0 - worst, 100 - best"));
+    qualityOption.setValueName(QStringLiteral("quality"));
+
     QCommandLineOption maxThreadsOption(QStringLiteral("max-threads"));
     maxThreadsOption.setDescription(i18n("Maximum number of threads that can be used when encoding a wallpaper"));
     maxThreadsOption.setValueName(QStringLiteral("max-threads"));
@@ -49,6 +53,7 @@ int main(int argc, char **argv)
     parser.addOption(outputOption);
     parser.addOption(maxThreadsOption);
     parser.addOption(speedOption);
+    parser.addOption(qualityOption);
     parser.addOption(codecOption);
     parser.addOption(verboseOption);
     parser.process(app);
@@ -103,6 +108,15 @@ int main(int argc, char **argv)
         bool ok;
         if (const int speed = parser.value(speedOption).toInt(&ok); ok) {
             writer.setSpeed(speed);
+        } else {
+            parser.showHelp(-1);
+        }
+    }
+
+    if (parser.isSet(qualityOption)) {
+        bool ok;
+        if (const int quality = parser.value(qualityOption).toInt(&ok); ok) {
+            writer.setQuality(quality);
         } else {
             parser.showHelp(-1);
         }

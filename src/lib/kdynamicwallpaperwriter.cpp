@@ -37,6 +37,7 @@ public:
     QList<KDynamicWallpaperWriter::ImageView> images;
     QList<KDynamicWallpaperMetaData> metaData;
     std::optional<int> speed;
+    std::optional<int> quality;
     std::optional<int> maxThreadCount;
     avifCodecChoice codecChoice = AVIF_CODEC_CHOICE_AUTO;
 };
@@ -94,6 +95,7 @@ bool KDynamicWallpaperWriterPrivate::flush(QIODevice *device)
     avifEncoder *encoder = avifEncoderCreate();
     encoder->codecChoice = codecChoice;
     encoder->speed = speed.value_or(AVIF_SPEED_DEFAULT);
+    encoder->quality = quality.value_or(AVIF_QUALITY_DEFAULT);
     encoder->maxThreads = maxThreadCount.value_or(QThread::idealThreadCount());
     auto encoderCleanup = qScopeGuard([&encoder]() {
         avifEncoderDestroy(encoder);
@@ -186,6 +188,23 @@ void KDynamicWallpaperWriter::setSpeed(int speed)
 std::optional<int> KDynamicWallpaperWriter::speed() const
 {
     return d->speed;
+}
+
+/*!
+ * Sets the encoding quality to \a quality. The quality value must be between 0 and 100, where
+ * 0 is the lowest quality, and 100 is the best quality.
+ */
+void KDynamicWallpaperWriter::setQuality(int quality)
+{
+    d->quality = qBound(0, quality, 100);
+}
+
+/*!
+ * Returns the encoding quality, between 0-100.
+ */
+std::optional<int> KDynamicWallpaperWriter::quality() const
+{
+    return d->quality;
 }
 
 void KDynamicWallpaperWriter::setMetaData(const QList<KDynamicWallpaperMetaData> &metaData)
