@@ -102,7 +102,7 @@ bool KDynamicWallpaperWriterPrivate::flush(QIODevice *device)
     });
 
     for (const auto &view : images) {
-        const QImage image = view.data().convertToFormat(QImage::Format_RGB888);
+        const QImage image = view.data().convertToFormat(QImage::Format_RGBA8888);
         if (image.isNull()) {
             wallpaperWriterError = KDynamicWallpaperWriter::UnknownError;
             errorString = QStringLiteral("Failed to read: %1").arg(view.key());
@@ -115,7 +115,7 @@ bool KDynamicWallpaperWriterPrivate::flush(QIODevice *device)
         avifRGBImage rgb;
         avifRGBImageSetDefaults(&rgb, avif);
 
-        rgb.format = AVIF_RGB_FORMAT_RGB;
+        rgb.format = AVIF_RGB_FORMAT_RGBA;
         rgb.depth = 8;
         rgb.rowBytes = image.bytesPerLine();
         rgb.pixels = const_cast<uint8_t *>(image.constBits());
